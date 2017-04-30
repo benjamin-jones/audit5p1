@@ -1,5 +1,5 @@
 import re
-from common import *
+from Common import *
 
 
 PLUGIN_NAME = "NetworkProtection"

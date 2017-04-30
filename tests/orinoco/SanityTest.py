@@ -42,8 +42,8 @@ class SanityTest(Test):
         ssh_daemon_not_running = True
         for process in root_processes:
             if "sshd" in process or "dropbear" in process:
-                ssh_daemon = False
-        self.action_results.append({"ssh_daemon_not_running": ssh_daemon})
+                ssh_daemon_not_running = False
+        self.action_results.append(dict(ssh_daemon_not_running=ssh_daemon_not_running))
 
         return
 

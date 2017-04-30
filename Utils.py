@@ -1,7 +1,7 @@
 import json
 import importlib
 
-from common import *
+from Common import *
 
 
 def get_operating_system(interrogator):

@@ -2,7 +2,7 @@ import importlib
 import json
 import sys
 
-from common import *
+from Common import *
 from plans.Plan import Plan
 
 

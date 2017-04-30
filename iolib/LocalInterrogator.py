@@ -1,7 +1,7 @@
-from Interrogator import Interrogator
+from iolib.Interrogator import Interrogator
 
 
-class SerialInterrogator(Interrogator):
+class LocalInterrogator(Interrogator):
 
     def connect(self, target, options):
         if not target:

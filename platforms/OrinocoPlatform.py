@@ -1,6 +1,6 @@
 from tests.orinoco.OrinocoTestSet import OrinocoTestSet
 from platforms.Platform import Platform
-from common import *
+from Common import *
 
 import json
 

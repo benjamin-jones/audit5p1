@@ -1,10 +1,10 @@
 import argparse
 import logging
 
-from LocalInterrogator import LocalInterrogator
-from SSHInterrogator import SSHInterrogator
-from SerialInterrogator import SerialInterrogator
 from Utils import *
+from iolib.LocalInterrogator import LocalInterrogator
+from iolib.SSHInterrogator import SSHInterrogator
+from iolib.SerialInterrogator import SerialInterrogator
 
 
 def main():

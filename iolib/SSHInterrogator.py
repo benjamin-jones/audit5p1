@@ -1,5 +1,6 @@
-from Interrogator import Interrogator
 from paramiko import *
+
+from iolib.Interrogator import Interrogator
 
 
 class SSHInterrogator(Interrogator):
