@@ -1,6 +1,5 @@
 import argparse
 import logging
-import json
 
 from SSHInterrogator import SSHInterrogator
 from LocalInterrogator import LocalInterrogator

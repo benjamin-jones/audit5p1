@@ -1,4 +1,5 @@
 {
+  "platform" : "Linux",
   "plan_plugins" : ["ApplicationSandboxing", "NetworkProtection"],
-  "shell" : "bash"
+  "shell" : "busybox"
 }

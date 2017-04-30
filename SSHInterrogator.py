@@ -47,8 +47,13 @@ class SSHInterrogator(Interrogator):
 
     @staticmethod
     def read_stdout(stream_tuple):
-        stdin, stdout, stdin = stream_tuple
+        stdin, stdout, stderr = stream_tuple
         return stdout.read()
+
+    @staticmethod
+    def read_stderr(stream_tuple):
+        stdin, stdout, stderr = stream_tuple
+        return stderr.read()
 
     def disconnect(self):
         if not self.connected:
