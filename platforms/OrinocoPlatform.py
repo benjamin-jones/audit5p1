@@ -1,8 +1,8 @@
-from tests.orinoco.OrinocoTestSet import OrinocoTestSet
-from platforms.Platform import Platform
-from Common import *
-
 import json
+
+from commonlib.Common import *
+from platforms.Platform import Platform
+from tests.orinoco.OrinocoTestSet import OrinocoTestSet
 
 
 class OrinocoPlatform(Platform):

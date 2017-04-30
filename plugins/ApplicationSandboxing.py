@@ -1,5 +1,6 @@
 import re
-from Common import *
+
+from commonlib.Common import *
 
 SHELL = SHELL_BASH
 

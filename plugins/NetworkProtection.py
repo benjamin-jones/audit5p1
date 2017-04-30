@@ -1,6 +1,6 @@
 import re
-from Common import *
 
+from commonlib.Common import *
 
 PLUGIN_NAME = "NetworkProtection"
 SHELL = SHELL_BASH

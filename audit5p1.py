@@ -1,7 +1,7 @@
 import argparse
 import logging
 
-from Utils import *
+from commonlib.Utils import *
 from iolib.LocalInterrogator import LocalInterrogator
 from iolib.SSHInterrogator import SSHInterrogator
 from iolib.SerialInterrogator import SerialInterrogator
