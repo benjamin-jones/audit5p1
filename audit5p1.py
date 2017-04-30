@@ -33,8 +33,10 @@ def main():
         interrogator = SSHInterrogator()
     elif args.using_serial is not None:
         logging.info("Serial Interrogator was chosen")
+        #TODO: Implement serial interrogator
         interrogator = SerialInterrogator()
     else:
+        #TODO: Implement local interrogator
         interrogator = LocalInterrogator()
 
     try:
