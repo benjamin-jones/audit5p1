@@ -1,7 +1,9 @@
-from Plan import Plan
-from common import *
-import json
 import importlib
+import json
+import sys
+
+from common import *
+from plans.Plan import Plan
 
 
 class GenericLinuxPlan(Plan):
@@ -78,6 +80,8 @@ class GenericLinuxPlan(Plan):
         return
 
     def report(self):
-        self.logger.info("Generating JSON report")
+        self.logger.info("Generating JSON plan results")
+        sys.stdout.flush()
         print(json.dumps(self.results, indent=4, sort_keys=True))
-        return
+        sys.stdout.flush()
+        return self.results

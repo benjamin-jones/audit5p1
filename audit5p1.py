@@ -1,11 +1,9 @@
 import argparse
 import logging
 
-from SSHInterrogator import SSHInterrogator
 from LocalInterrogator import LocalInterrogator
+from SSHInterrogator import SSHInterrogator
 from SerialInterrogator import SerialInterrogator
-from GenericLinuxPlan import GenericLinuxPlan
-
 from Utils import *
 
 
@@ -23,7 +21,6 @@ def main():
     parser.add_argument('username', help="Username for target")
     parser.add_argument('password', help="Password for user on target")
     parser.add_argument('config', help="Config file to use for target")
-
 
     args = parser.parse_args()
 
@@ -55,29 +52,42 @@ def main():
 
     os = get_operating_system(interrogator)
 
-    plan = None
-    config = None
-    if os == OS_LINUX:
-        logging.info("Linux platform detected!")
-        plan = GenericLinuxPlan(interrogator, logging)
-        try:
-            with open(config_file, "r") as f:
-                config = f.read()
-        except IOError:
-            logging.error("Could not open config file")
-            return_code = EXIT_FAILURE_EXCEPTION
-            return return_code
+    try:
+        with open(config_file, "r") as f:
+            config = f.read()
+    except IOError:
+        logging.error("Could not open config file")
+        return_code = EXIT_FAILURE_EXCEPTION
+        return return_code
 
-    if not plan:
-        logging.error("Platform not detected!")
+    platform = get_platform_module(config)(logging)
+
+    # Verify target matches the platform's expected OS
+    if not platform.check(os):
+        logging.error("Platform does not match config!")
         return_code = EXIT_FAILURE_PLATFORM
         return return_code
 
+    # Load the test plan for the platform
+    plan = get_plan_module(config)(interrogator, logging)
+
+    if not plan:
+        logging.error("Failed to load plan module")
+        return_code = EXIT_FAILURE_PLATFORM
+        return return_code
+
+    # Execute the test plan for the platform
     plan.load(config=config)
     plan.run()
     interrogator.disconnect()
 
-    plan.report()
+    results = plan.report()
+
+    # Validate the test plan for the platform
+    platform.validate(results)
+
+    platform.report()
+
     logging.info("Audit finished")
     return return_code
 

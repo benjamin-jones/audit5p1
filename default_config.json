@@ -1,5 +1,9 @@
 {
-  "platform" : "Linux",
-  "plan_plugins" : ["ApplicationSandboxing", "NetworkProtection"],
+  "platform" : "OrinocoPlatform",
+  "plan" : "GenericLinuxPlan",
+  "plan_plugins" : [
+    "ApplicationSandboxing",
+    "NetworkProtection"
+  ],
   "shell" : "busybox"
 }
