@@ -33,10 +33,10 @@ def main():
         interrogator = SSHInterrogator()
     elif args.using_serial is not None:
         logging.info("Serial Interrogator was chosen")
-        #TODO: Implement serial interrogator
+        # TODO: Implement serial interrogator
         interrogator = SerialInterrogator()
     else:
-        #TODO: Implement local interrogator
+        # TODO: Implement local interrogator
         interrogator = LocalInterrogator()
 
     try:
@@ -92,6 +92,7 @@ def main():
 
     logging.info("Audit finished")
     return return_code
+
 
 if __name__ == "__main__":
     rtnCode = main()
