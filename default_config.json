@@ -1,0 +1,4 @@
+{
+  "plan_plugins" : ["ApplicationSandboxing", "NetworkProtection"],
+  "shell" : "bash"
+}
