@@ -63,9 +63,12 @@ class GenericLinuxPlan(Plan):
                     required_binaries = i.set_shell(shell)
 
                     if self.prereqs_met(required_binaries):
-                        self.logger.info("Required binaries found on target")
+                        self.logger.info("GenericLinuxPlan: Required binaries found on target for plugin %s", plugin)
                         i.load(self.register)
                         self.plugins[plugin] = i
+                    else:
+                        self.logger.info("GenericLinuxPlan: Required binaries NOT found on target for plugin %s",
+                                         plugin)
                 else:
                     raise ValueError
         return

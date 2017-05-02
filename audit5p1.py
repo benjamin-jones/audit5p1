@@ -27,6 +27,13 @@ def main():
     logging.info("5+1 Auditor is starting")
 
     target, username, password, config_file = args.target, args.username, args.password, args.config
+    try:
+        with open(config_file, "r") as f:
+            config = f.read()
+    except IOError:
+        logging.error("Could not open config file")
+        return_code = EXIT_FAILURE_EXCEPTION
+        return return_code
 
     if args.using_ssh is not None:
         logging.info("SSH Interrogator was chosen")
@@ -34,7 +41,7 @@ def main():
     elif args.using_serial is not None:
         logging.info("Serial Interrogator was chosen")
         # TODO: Implement serial interrogator
-        interrogator = SerialInterrogator()
+        interrogator = SerialInterrogator(config, logging)
     else:
         # TODO: Implement local interrogator
         interrogator = LocalInterrogator()
@@ -53,15 +60,6 @@ def main():
         return return_code
 
     os = get_operating_system(interrogator)
-
-    try:
-        with open(config_file, "r") as f:
-            config = f.read()
-    except IOError:
-        logging.error("Could not open config file")
-        return_code = EXIT_FAILURE_EXCEPTION
-        return return_code
-
     platform = get_platform_module(config)(logging)
 
     # Verify target matches the platform's expected OS
