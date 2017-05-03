@@ -56,6 +56,10 @@ class SSHInterrogator(Interrogator):
         stdin, stdout, stderr = stream_tuple
         return stderr.read()
 
+    @staticmethod
+    def get_line_ending():
+        return "\n"
+
     def disconnect(self):
         if not self.connected:
             raise ConnectionError

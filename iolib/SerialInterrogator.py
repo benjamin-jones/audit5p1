@@ -22,7 +22,7 @@ class SerialInterrogator(Interrogator):
         if not target:
             raise ConnectionError
         try:
-            self.serial = serial.Serial(target, self.baudrate, timeout=1)
+            self.serial = serial.Serial(target, self.baudrate, timeout=10)
         except:
             raise ConnectionError
         return
@@ -75,6 +75,10 @@ class SerialInterrogator(Interrogator):
     @staticmethod
     def read_stderr(streamable):
         return bytes("", "utf-8") # can't determine stderr on serial mode
+
+    @staticmethod
+    def get_line_ending():
+        return "\r\n"
 
     def disconnect(self):
         self.serial.write(b"exit\r\n")

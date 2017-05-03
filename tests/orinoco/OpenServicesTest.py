@@ -78,7 +78,7 @@ class OpenServicesTest(Test):
             last_colon = socket.rfind(":")
             address = socket[:last_colon].strip()
             port = socket[last_colon + 1:].strip()
-            if address != "127.0.0.1":
+            if address != "::1":
                 for pid in pids:
                     if pid == "":
                         self.action_results.append({"tcp6_socket_port_" + port + "_kernel_module": False})
@@ -113,7 +113,7 @@ class OpenServicesTest(Test):
             last_colon = socket.rfind(":")
             address = socket[:last_colon].strip()
             port = socket[last_colon + 1:].strip()
-            if address != "127.0.0.1":
+            if address != "::1":
                 for pid in pids:
                     if pid == "":
                         # There is a race condition here, UDP sockets are sometimes open temporarily

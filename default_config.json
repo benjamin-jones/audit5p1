@@ -5,6 +5,6 @@
     "ApplicationSandboxing",
     "NetworkProtection"
   ],
-  "shell" : "busybox",
+  "shell" : "bash",
   "serial_baudrate" : 115200
 }

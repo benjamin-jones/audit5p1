@@ -13,7 +13,6 @@ actions = [
 
 required_binaries = []
 
-
 def load(register_callback):
     for key, callback in actions:
         register_callback(key, callback, PLUGIN_NAME)
@@ -33,18 +32,34 @@ def set_shell(c_shell):
     return required_binaries
 
 
+def get_ps_fields(interrogator):
+
+    streamable = interrogator.run_command_as_root("ps aux | grep USER")
+    line_ending = interrogator.get_line_ending()
+    result = interrogator.read_stdout(streamable).decode("ascii").strip().split(line_ending)
+
+    result = " ".join([re.sub(r' {2,}', " ", a) for a in result if "grep" not in a])
+    result = result.split(" ")
+
+    pid_idx = result.index("PID")
+    command_idx = result.index("COMMAND")
+
+    return pid_idx, command_idx
+
 def get_root_processes(interrogator):
     global SHELL
+    pid_idx, command_idx = get_ps_fields(interrogator)
     streamable = interrogator.run_command_as_root("ps aux | grep root")
-    result = interrogator.read_stdout(streamable).decode("ascii").strip().split("\n")
+    line_ending = interrogator.get_line_ending()
+    result = interrogator.read_stdout(streamable).decode("ascii").strip().split(line_ending)
     result = [str(a).strip() for a in result if len(a) > 2 and "[" not in a and "grep" not in a]
 
     if SHELL == SHELL_BASH:
-        result = [{int(re.sub(r' {2,}', " ", a).split(" ")[0]): " ".join(re.sub(r' {2,}', " ", a).split(" ")[10:])}
+        result = [{int(re.sub(r' {2,}', " ", a).split(" ")[pid_idx]): " ".join(re.sub(r' {2,}', " ", a).split(" ")[10:])}
                   for a in result]
 
     elif SHELL == SHELL_BUSYBOX:
-        result = [{int(re.sub(r' {2,}', " ", a).split(" ")[0]):" ".join(re.sub(r' {2,}', " ", a).split(" ")[3:])}
+        result = [{int(re.sub(r' {2,}', " ", a).split(" ")[pid_idx]):" ".join(re.sub(r' {2,}', " ", a).split(" ")[3:])}
                   for a in result]
     result_dict = {}
 
@@ -56,7 +71,8 @@ def get_root_processes(interrogator):
 
 def get_mounts(interrogator):
     streamable = interrogator.run_command_as_root("mount")
-    result = interrogator.read_stdout(streamable).decode("ascii").strip().split("\n")
+    line_ending = interrogator.get_line_ending()
+    result = interrogator.read_stdout(streamable).decode("ascii").strip().split(line_ending)
     return result
 
 
