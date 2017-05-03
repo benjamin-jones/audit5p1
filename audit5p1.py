@@ -10,7 +10,7 @@ from iolib.SerialInterrogator import SerialInterrogator
 def main():
     return_code = EXIT_SUCCESS
 
-    logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
+    logging.basicConfig(format='%(levelname)s %(filename)s:%(funcName)s %(asctime)s %(message)s', level=logging.INFO)
 
     parser = argparse.ArgumentParser(description="Audit a target with regards to 5+1 security concept")
     parser.add_argument('--ssh', dest="using_ssh", action="store_const", help="Connect to target with SSH",

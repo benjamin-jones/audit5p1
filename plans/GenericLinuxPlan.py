@@ -55,7 +55,7 @@ class GenericLinuxPlan(Plan):
             self.config = json.loads(config)
         if "plan_plugins" in self.config.keys():
             for plugin in self.config["plan_plugins"]:
-                i = importlib.import_module("plugins." + plugin)
+                i = importlib.import_module("plugins.linux." + plugin)
                 if "shell" in self.config.keys():
                     if self.config["shell"] not in SUPPORTED_SHELL:
                         raise ValueError

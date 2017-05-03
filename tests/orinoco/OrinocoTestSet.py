@@ -3,7 +3,8 @@ import importlib
 from tests.TestSet import TestSet
 
 TEST_SET = [
-    "SanityTest"
+    "SanityTest",
+    "OpenServicesTest"
 ]
 
 

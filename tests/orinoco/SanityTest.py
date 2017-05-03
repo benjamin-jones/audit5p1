@@ -10,6 +10,9 @@ conditions = [
     "root_processes"
 ]
 
+# The number of actions that must fail for the test to fails
+MAXIMUM_ACTION_FAILURE_COUNT = 1
+
 # This is a sample derived test case which has preconditions, performs two validations actions, stores the results,
 # and checks the results against the postcondition policy
 
@@ -18,6 +21,7 @@ class SanityTest(Test):
 
     def __init__(self, logger):
         self.name = TEST_NAME
+        self.threshold = MAXIMUM_ACTION_FAILURE_COUNT
         self.report = None
         self.conditions = conditions
         self.conditions_met = False
@@ -43,15 +47,15 @@ class SanityTest(Test):
         root_processes = self.report["root_processes"]
 
         # Action 1: Check number of root processes, more than 5 is too many
-        if len(root_processes) > 5:
+        if len(root_processes.keys()) > 5:
             self.action_results.append({"few_root_processes": False})
         else:
             self.action_results.append({"few_root_processes": True})
 
         # Action 2: Check for sshd or dropbear, the existence of either is a failure
         ssh_daemon_not_running = True
-        for process in root_processes:
-            if "sshd" in process or "dropbear" in process:
+        for pid in root_processes.keys():
+            if "sshd" in root_processes[pid] or "dropbear" in root_processes[pid]:
                 ssh_daemon_not_running = False
         self.action_results.append(dict(ssh_daemon_not_running=ssh_daemon_not_running))
 
@@ -62,7 +66,6 @@ class SanityTest(Test):
     # Total test case failure can be handled via threshold, reported in action_results
     def postconditions(self):
         false_count = 0
-        threshold = 2
         for action in self.action_results:
             for key in action.keys():
                 result = action[key]
@@ -70,8 +73,8 @@ class SanityTest(Test):
                     self.logger.error("%s: Action %s was false", self.name, key)
                     sys.stdout.flush()
                     false_count += 1
-        if threshold and false_count >= threshold:
-            self.logger.error("%s: FAILURE - Exceeded failure threshold", self.name)
+        if self.threshold and false_count >= self.threshold:
+            self.logger.error("%s: Exceeded failure threshold [TEST FAILURE]", self.name)
             self.action_results.append(dict(threshold_reached=True))
         return self.action_results
 

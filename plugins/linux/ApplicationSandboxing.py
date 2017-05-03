@@ -40,11 +40,18 @@ def get_root_processes(interrogator):
     result = [str(a).strip() for a in result if len(a) > 2 and "[" not in a and "grep" not in a]
 
     if SHELL == SHELL_BASH:
-        result = [" ".join(re.sub(r' {2,}', " ", a).split(" ")[10:]) for a in result]
-    elif SHELL == SHELL_BUSYBOX:
-        result = [" ".join(re.sub(r' {2,}', " ", a).split(" ")[3:]) for a in result]
+        result = [{int(re.sub(r' {2,}', " ", a).split(" ")[0]): " ".join(re.sub(r' {2,}', " ", a).split(" ")[10:])}
+                  for a in result]
 
-    return result
+    elif SHELL == SHELL_BUSYBOX:
+        result = [{int(re.sub(r' {2,}', " ", a).split(" ")[0]):" ".join(re.sub(r' {2,}', " ", a).split(" ")[3:])}
+                  for a in result]
+    result_dict = {}
+
+    for process in result:
+        for key in process.keys():
+            result_dict[key] = process[key]
+    return result_dict
 
 
 def get_mounts(interrogator):

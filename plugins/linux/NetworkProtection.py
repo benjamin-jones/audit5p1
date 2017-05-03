@@ -55,39 +55,57 @@ def get_security_iptables(interrogator):
 
 
 def get_listening_ipv4_tcp_sockets(interrogator):
-    streamble = interrogator.run_command("netstat -ln | grep LISTEN\ | grep tcp\ ")
+    streamble = interrogator.run_command("netstat -ln | grep tcp | grep 0.0.0.0")
     result = interrogator.read_stdout(streamble).decode("ascii").strip().split("\n")
     result = [str(a).strip() for a in result if len(a) > 2]
     result = [re.sub(r' {2,}', " ", a) for a in result]
     result = [a[8:].split(" ")[0] for a in result]
+    result = get_pids_for_nonlocal_sockets(interrogator, result,"tcp")
     return result
 
 
 def get_listening_ipv4_udp_sockets(interrogator):
-    streamble = interrogator.run_command("netstat -ln | grep udp\ ")
+    streamble = interrogator.run_command("netstat -ln | grep udp | grep 0.0.0.0 ")
     result = interrogator.read_stdout(streamble).decode("ascii").strip().split("\n")
     result = [str(a).strip() for a in result if len(a) > 2]
     result = [re.sub(r' {2,}', " ", a) for a in result]
     result = [a[8:].split(" ")[0] for a in result]
+    result = get_pids_for_nonlocal_sockets(interrogator, result,"udp")
     return result
 
 
 def get_listening_ipv6_udp_sockets(interrogator):
-    streamble = interrogator.run_command("netstat -ln | grep udp6\ ")
+    streamble = interrogator.run_command("netstat -ln | grep udp | grep ::: ")
     result = interrogator.read_stdout(streamble).decode("ascii").strip().split("\n")
     result = [str(a).strip() for a in result if len(a) > 2]
     result = [re.sub(r' {2,}', " ", a) for a in result]
-    result = [a[9:].split(" ")[0] for a in result]
+    result = [a[8:].split(" ")[0] for a in result]
+    result = get_pids_for_nonlocal_sockets(interrogator, result,"udp")
     return result
 
 
 def get_listening_ipv6_tcp_sockets(interrogator):
-    streamble = interrogator.run_command("netstat -ln | grep LISTEN\ | grep tcp6\ ")
+    streamble = interrogator.run_command("netstat -ln | grep tcp | grep ::: ")
     result = interrogator.read_stdout(streamble).decode("ascii").strip().split("\n")
     result = [str(a).strip() for a in result if len(a) > 2]
     result = [re.sub(r' {2,}', " ", a) for a in result]
-    result = [a[9:].split(" ")[0] for a in result]
+    result = [a[8:].split(" ")[0] for a in result]
+    result = get_pids_for_nonlocal_sockets(interrogator, result, "tcp")
     return result
+
+
+def get_pids_for_nonlocal_sockets(interrogator, list_of_sockets, protocol):
+
+    new_dict = {}
+    for socket in list_of_sockets:
+        last_colon = socket.rfind(":")
+        port = socket[last_colon+1:]
+        streamable = interrogator.run_command_as_root("fuser " + port + "/" + protocol)
+        result = interrogator.read_stdout(streamable).decode("ascii").strip().split(" ")
+
+        if len(result) >= 1:
+            new_dict[socket] = result
+    return new_dict
 
 
 def load(register_callback):
@@ -105,4 +123,5 @@ def set_shell(c_shell):
         required_binaries.append("netstat")
         required_binaries.append("grep")
         required_binaries.append("iptables")
+        required_binaries.append("fuser")
     return required_binaries
